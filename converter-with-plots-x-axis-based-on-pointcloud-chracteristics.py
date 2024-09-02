@@ -67,7 +67,7 @@ def filter_gaussian(input_filename, output_filename):
     plt.xlim(filtered_min - padding_filtered, filtered_max + padding_filtered)
 
     # Add a title for the whole figure
-    plt.suptitle('Pointcloud from Geoslam', fontsize=16)
+    plt.suptitle('Pointcloud from our Livox Horizon based system', fontsize=16)
 
     # Display the plots
     plt.tight_layout(rect=[0, 0, 1, 0.95])  # Adjust layout to accommodate the title
@@ -75,6 +75,6 @@ def filter_gaussian(input_filename, output_filename):
 
 # Example usage:
 filter_gaussian(
-    r'C:\Users\proje\Desktop\costas\AgApostoloi\filter-95\geoslam.txt',
-    r'C:\Users\proje\Desktop\costas\AgApostoloi\filter-95\filtered-geoslam.txt'
+    r'C:\Users\proje\Desktop\costas\AgApostoloi\filter-95\livox.txt',
+    r'C:\Users\proje\Desktop\costas\AgApostoloi\filter-95\filtered-livox.txt'
 )
