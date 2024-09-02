@@ -45,7 +45,7 @@ def plot_accuracy_comparison(stats):
     """
     labels = ["GeoSLAM", "iPhone 15 Pro Max", "Livox Horizon based system", "NavVis VLX 3", "FARO FOCUS 3D"]
     plt.figure(figsize=(10, 6))
-    plt.bar(labels, stats['Filename'], stats['Mean C2C Distance'], yerr=stats['Standard Deviation'], 
+    plt.bar(labels, stats['Mean C2C Distance'], yerr=stats['Standard Deviation'], 
             capsize=5, color='skyblue', edgecolor='black')
     
     plt.xlabel('Point Cloud')
