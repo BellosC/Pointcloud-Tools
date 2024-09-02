@@ -25,28 +25,56 @@ def filter_gaussian(input_filename, output_filename):
     # Step 7: Save the filtered data to a new file
     filtered_data.to_csv(output_filename, sep=' ', index=False, header=False)
     
-    # Step 8: Plot histograms
-    plt.figure(figsize=(12, 6))
+    # Step 8: Plot histograms with adaptive binning and dynamic axis scaling
+    plt.figure(figsize=(14, 7))
+
+    # Function to calculate optimal number of bins using Freedman-Diaconis rule
+    def optimal_bins(data):
+        q25, q75 = np.percentile(data, [25, 75])
+        iqr = q75 - q25
+        bin_width = 2 * iqr * len(data) ** (-1/3)
+        if bin_width == 0:
+            return 10  # Fallback to 10 bins if IQR is zero
+        bins = int(np.ceil((data.max() - data.min()) / bin_width))
+        return bins
 
     # Histogram before filtering
     plt.subplot(1, 2, 1)
-    plt.hist(last_column, bins=np.arange(0, 0.11, 0.01), edgecolor='black')
+    bins_before = optimal_bins(last_column)
+    plt.hist(last_column, bins=bins_before, edgecolor='black', color='skyblue')
     plt.title('Before Filtering')
     plt.xlabel('C2C Differences')
     plt.ylabel('Number of Points')
-    plt.xticks(np.arange(0, 0.11, 0.01))
+    plt.grid(True, linestyle='--', alpha=0.7)
+
+    # Dynamic x-axis limits with padding
+    padding = (last_column.max() - last_column.min()) * 0.05  # 5% padding on each side
+    plt.xlim(last_column.min() - padding, last_column.max() + padding)
 
     # Histogram after filtering
     plt.subplot(1, 2, 2)
-    plt.hist(filtered_data.iloc[:, -1], bins=np.arange(0, 0.11, 0.01), edgecolor='black')
+    bins_after = optimal_bins(filtered_data.iloc[:, -1])
+    plt.hist(filtered_data.iloc[:, -1], bins=bins_after, edgecolor='black', color='salmon')
     plt.title('After Filtering')
     plt.xlabel('C2C Differences')
     plt.ylabel('Number of Points')
-    plt.xticks(np.arange(0, 0.11, 0.01))
+    plt.grid(True, linestyle='--', alpha=0.7)
+
+    # Dynamic x-axis limits with padding
+    filtered_min = filtered_data.iloc[:, -1].min()
+    filtered_max = filtered_data.iloc[:, -1].max()
+    padding_filtered = (filtered_max - filtered_min) * 0.05  # 5% padding on each side
+    plt.xlim(filtered_min - padding_filtered, filtered_max + padding_filtered)
+
+    # Add a title for the whole figure
+    plt.suptitle('Pointcloud from our Livox Horizon based system', fontsize=16)
 
     # Display the plots
-    plt.tight_layout()
+    plt.tight_layout(rect=[0, 0, 1, 0.95])  # Adjust layout to accommodate the title
     plt.show()
 
 # Example usage:
-filter_gaussian(r'C:\Users\proje\Desktop\costas\AgApostoloi\filter-95\faro.txt', r'C:\Users\proje\Desktop\costas\AgApostoloi\filter-95\filtered-faro.txt')
+filter_gaussian(
+    r'C:\Users\proje\Desktop\costas\AgApostoloi\filter-95\livox.txt',
+    r'C:\Users\proje\Desktop\costas\AgApostoloi\filter-95\filtered-livox.txt'
+)
